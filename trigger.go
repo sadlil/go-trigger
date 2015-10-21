@@ -6,6 +6,6 @@ func On(event string, task interface{}) {
 	add(event, task)
 }
 
-func Do(event string, params ...interface{}) (result []reflect.Value, err error) {
+func Fire(event string, params ...interface{}) (result []reflect.Value, err error) {
 	return invoke(event, params...)
 }
