@@ -90,10 +90,38 @@ package where you defien it. Where You trigger it You do not need to import it t
   }
 ```
 
+### Methods Available
+```go
+On(event string, task interface{}) error
+  - Add a Event. task must be function. Throws an error if the event is duplicated.
+   
+Fire(event string, params ...interface{}) ([]reflect.Value, error)
+  - Fires the task specified with the event key. params are the parameter and [] is the returned values of
+  task.
+  
+Clear(event string) error
+  - Delete a event from the event list. throws an error if event not found.
+  
+ClearEvents() error
+  - Deletes all event from the event list.
+  
+HasEvent(event string) bool
+  - Checks if a event exists or not. Return true if the event list have a evnt with that key.
+  false otherwise.
+  
+Events() []string
+  - Returns all the events added.
+  
+EventCount() int
+  - Returns count of the events. If non found return 0;
+  
+```
+
 
 ### Under Development Feautures
  1. Return already type converted values from Fire.
  2. Add support of Methods on structs events.
+ 3. Multiple event handler for a event.
 
 ### Licence
     Licenced under MIT Licence
