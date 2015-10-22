@@ -58,9 +58,10 @@ values, err := trigger.Fire("third-event", 5, 6)
 ```
 
 
-You can define your event in one package and trigger it another package. Your define and triggers are global.
-Define anywhere, fire anywhere. You can define any function in any package u only need to import the function's
-package where you defien it. Where You trigger it You do not need to import it there.
+You can define your event in one package and trigger it another package. Your event and triggers are global.
+Define anywhere, fire anywhere. You can define any function in any package as event u only need to 
+import the function's specified package where you defien the event. Where You trigger the event You do not 
+need to import it there.
 ```go
 //---------------------------------------------
   package a
@@ -85,7 +86,7 @@ package where you defien it. Where You trigger it You do not need to import it t
   )
   
   func() {
-    values, err := trigger.Fire("new-event", 10, 10) // You dont need to import package a here.
+    values, err := trigger.Fire("new-event", 10, 10) // You don't need to import package a here.
     fmt.Println(values[0].Int())
   }
 ```
@@ -96,8 +97,8 @@ On(event string, task interface{}) error
   - Add a Event. task must be function. Throws an error if the event is duplicated.
    
 Fire(event string, params ...interface{}) ([]reflect.Value, error)
-  - Fires the task specified with the event key. params are the parameter and [] is the returned values of
-  task.
+  - Fires the task specified with the event key. params are the parameter and [] is the 
+  returned values of task.
   
 Clear(event string) error
   - Delete a event from the event list. throws an error if event not found.
@@ -106,8 +107,8 @@ ClearEvents() error
   - Deletes all event from the event list.
   
 HasEvent(event string) bool
-  - Checks if a event exists or not. Return true if the event list have a evnt with that key.
-  false otherwise.
+  - Checks if a event exists or not. Return true if the event list have a evnt with 
+  that key.  false otherwise.
   
 Events() []string
   - Returns all the events added.
@@ -129,5 +130,5 @@ EventCount() int
 
 
 
-Any Suggestions and Bug Report will be gladly appricated.
+##### Any Suggestions and Bug Report will be gladly appricated.
 
