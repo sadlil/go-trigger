@@ -137,17 +137,20 @@ On(event string, task interface{}) error
   - Add a Event. task must be function. Throws an error if the event is duplicated.
    
 Fire(event string, params ...interface{}) ([]reflect.Value, error)
-  - Fires the task specified with the event key. params are the parameter and [] is the returned values of
-  task. Fire Triggers the event and wait for it to end until it goes to execute the following codes.
+  - Fires the task specified with the event key. params are the parameter and [] is the 
+  returned values of task. Fire Triggers the event and wait for it to end until it goes 
+  to execute the following codes.
   
 FireBackground(event string, params ...interface{}) (chan []reflect.Value, error)
-  - Fires the task specified with the event key. Unlike Fire it runs the event in background
-  in goroutine. It triggers the event but does not wait for the event to end. It writes the returned 
-  values of the event in a channel and returns the channel of reflect.Values. You can get the returned 
-  values by reading the channel (IE. ret := <- returned channel).
+  - Fires the task specified with the event key. Unlike Fire it runs the event in
+  background in goroutine. It triggers the event but does not wait for the event
+  to end. It writes the returned values of the event in a channel and returns the
+  channel of reflect.Values. You can get the returned values by reading the
+  channel (IE. ret := <- returned channel).
   
-  - As FireBackground does not wait for the event to end first, if your program exits it will stop any running
-   event that did not finishes. So make sure your background events exits before ending the program.   
+  - As FireBackground does not wait for the event to end first, if your program 
+  exits it will stop any running event that did not finishes. So make sure your
+  background events exits before ending the program.   
 
 
 Clear(event string) error
@@ -157,7 +160,7 @@ ClearEvents() error
   - Deletes all event from the event list.
   
 HasEvent(event string) bool
-  - Checks if a event exists or not. Return true if the event list have a evnt with 
+  - Checks if a event exists or not. Return true if the event list have a event with 
   that key.  false otherwise.
   
 Events() []string
