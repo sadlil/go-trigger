@@ -6,8 +6,12 @@ func On(event string, task interface{}) error {
 	return add(event, task)
 }
 
-func Fire(event string, params ...interface{}) (result []reflect.Value, err error) {
+func Fire(event string, params ...interface{}) ([]reflect.Value, error) {
 	return invoke(event, params...)
+}
+
+func FireBackground(event string, params ...interface{}) (chan []reflect.Value, error) {
+	return invokeParallel(event, params...)
 }
 
 func Clear(event string) error {
