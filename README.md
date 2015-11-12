@@ -10,13 +10,14 @@ $ go get github.com/sadlil/go-trigger
 ```
 
 ### How to switch to a specific version
-`go get` the package. go to the lib directory in your $GOPATH/src. Change
-the tag using git. `go install` the package.
+`go get` the package. go to the package directory in your $GOPATH/src. 
+Change the tag using git. `go install` the package.
  
 ```bash
 $ go get github.com/sadlil/go-trigger
 $ cd $GOPATH/src/github.com/sadlil/go-trigger
 $ git checkout tags/<tag_name>
+$ go install
 
 ```
 #### Currently [available Tags](https://github.com/sadlil/go-trigger/releases)
