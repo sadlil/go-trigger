@@ -9,6 +9,24 @@ $ go get github.com/sadlil/go-trigger
 
 ```
 
+### How to switch to a specific version
+`go get` the package. go to the lib directory in your $GOPATH/src. Change
+the tag using git. `go install` the package.
+ 
+```bash
+$ go get github.com/sadlil/go-trigger
+$ cd $GOPATH/src/github.com/sadlil/go-trigger
+$ git checkout tags/<tag_name>
+
+```
+#### Currently [available Tags](https://github.com/sadlil/go-trigger/releases)
+ - [v0.01](https://github.com/sadlil/go-trigger/releases/tag/v0.01)
+     - Add Event with unique key Id.
+     - Trigger Event.
+     - List Events.
+     - Clear and Delete Events.
+
+
 ### How To Use
 
 Import the package into your code. Add the events with `trigger.On` method.
@@ -90,6 +108,25 @@ package where you defien it. Where You trigger it You do not need to import it t
   }
 ```
 
+You can run events in background with `FireBackground()`
+```go
+func main() {
+  trigger.On("first-event", func() {
+    for i := 1; i <= 1000; i++ {
+      fmt.Println(i)
+    }
+  })
+  channel, err := trigger.FireBackground("first-event")
+  fmt.Println("Event runs")
+  //read the returned channel
+  values := <- channel
+  
+  trigger.FireBackground("first-event")
+  fmt.Println("Running 2nd Event")
+}
+
+```
+
 ### Methods Available
 ```go
 On(event string, task interface{}) error
@@ -97,8 +134,18 @@ On(event string, task interface{}) error
    
 Fire(event string, params ...interface{}) ([]reflect.Value, error)
   - Fires the task specified with the event key. params are the parameter and [] is the returned values of
-  task.
+  task. Fire Triggers the event and wait for it to end until it goes to execute the following codes.
   
+FireBackground(event string, params ...interface{}) (chan []reflect.Value, error)
+  - Fires the task specified with the event key. Unlike Fire it runs the event in background
+  in goroutine. It triggers the event but does not wait for the event to end. It writes the returned 
+  values of the event in a channel and returns the channel of reflect.Values. You can get the returned 
+  values by reading the channel (IE. ret := <- returned channel).
+  
+  - As FireBackground does not wait for the event to end first, if your program exits it will stop any running
+   event that did not finishes. So make sure your background events exits before ending the program.   
+
+
 Clear(event string) error
   - Delete a event from the event list. throws an error if event not found.
   
@@ -118,10 +165,11 @@ EventCount() int
 ```
 
 
-### Under Development Feautures
- 1. Return already type converted values from Fire.
- 2. Add support of Methods on structs events.
- 3. Multiple event handler for a event.
+### Under Development Features
+ 1. Trigger event in background. - **[DONE]**
+ 2. Return already type converted values from Fire.
+ 3. Add support of Methods on structs events.
+ 4. Multiple event handler for a event.
 
 ### Licence
     Licenced under MIT Licence
@@ -129,5 +177,5 @@ EventCount() int
 
 
 
-Any Suggestions and Bug Report will be gladly appricated.
+Any Suggestions and Bug Report will be gladly appreciated.
 

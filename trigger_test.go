@@ -5,6 +5,7 @@ import (
 	. "gopkg.in/go-playground/assert.v1"
 	"sort"
 	"fmt"
+"runtime"
 )
 
 func TestOn(t *testing.T) {
@@ -108,4 +109,33 @@ func TestHasEvent(t *testing.T) {
 	ret = HasEvent("test-event-not-found")
 	Equal(t, ret, false)
 	ClearEvents()
+}
+
+
+func TestParallel(t *testing.T) {
+	On("p-1", func () {
+		for i:=1; i<=10000; i++ {
+
+		}
+	})
+
+	On("p-2", func () {
+		for i:=1; i<=10000; i++ {
+
+		}
+	})
+	prev := runtime.NumGoroutine()
+	FireBackground("p-1")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+
+	now := runtime.NumGoroutine()
+	fmt.Println("Number of go routine running ", now - prev)
+	Equal(t, 8, now - prev)
+	ClearEvents();
 }

@@ -3,12 +3,14 @@ package trigger
 import (
 	"reflect"
 	"errors"
+	"runtime"
 )
 
 var functionMap map[string]interface{}
 
 func init() {
 	functionMap = make(map[string]interface{})
+	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
 func add(event string, task interface{}) error {
@@ -31,6 +33,22 @@ func invoke(event string, params ...interface{}) ([]reflect.Value, error) {
 	}
 	result := f.Call(in)
 	return result, nil
+}
+
+func invokeParallel(event string, params ...interface{}) (chan []reflect.Value, error) {
+	f := reflect.ValueOf(functionMap[event])
+	if len(params) != f.Type().NumIn() {
+		return nil, errors.New("Parameter Mismatched")
+	}
+	in := make([]reflect.Value, len(params))
+	for k, param := range params {
+		in[k] = reflect.ValueOf(param)
+	}
+	results := make(chan []reflect.Value)
+	go func() {
+		results <- f.Call(in)
+	}()
+	return results, nil
 }
 
 
