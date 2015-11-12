@@ -106,7 +106,8 @@ need to import it there.
   )
   
   func() {
-    values, err := trigger.Fire("new-event", 10, 10) // You don't need to import package a here.
+    values, err := trigger.Fire("new-event", 10, 10) 
+    // You don't need to import package a here.
     fmt.Println(values[0].Int())
   }
 ```
@@ -137,9 +138,9 @@ On(event string, task interface{}) error
   - Add a Event. task must be function. Throws an error if the event is duplicated.
    
 Fire(event string, params ...interface{}) ([]reflect.Value, error)
-  - Fires the task specified with the event key. params are the parameter and [] is the 
-  returned values of task. Fire Triggers the event and wait for it to end until it goes 
-  to execute the following codes.
+  - Fires the task specified with the event key. params are the parameter and
+  [] is the returned values of task. Fire Triggers the event and wait for it to
+  end until it goes to execute the following codes.
   
 FireBackground(event string, params ...interface{}) (chan []reflect.Value, error)
   - Fires the task specified with the event key. Unlike Fire it runs the event in
