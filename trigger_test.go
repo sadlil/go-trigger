@@ -9,18 +9,14 @@ import (
 )
 
 func TestOn(t *testing.T) {
-	err := On("test-event", func() {	})
-	Equal(t, err, nil)
+	On("test-event", func() {	})
 	Equal(t, 1, EventCount())
 	ClearEvents()
 }
 
 func TestDualOn(t *testing.T) {
-	err := On("test-event", func() {	})
-	Equal(t, err, nil)
-	err2 := On("test-event", func() {	})
-	NotEqual(t, err2, nil)
-	Equal(t, err2.Error(), "Event Already Defined")
+	On("test-event", func() {	})
+	On("test-event", func() {	})
 	Equal(t, 1, EventCount())
 	ClearEvents()
 }
@@ -36,16 +32,19 @@ func TestTrigger(t *testing.T) {
 	On("test-event2", func(a, b int) int {
 		return a + b
 	})
-	vales, err := Fire("test-event2", 100, 5)
+	results, err := Fire("test-event2", 100, 5)
 	Equal(t, err, nil)
-	NotEqual(t, vales, nil)
-	Equal(t, vales[0].Int(), int64(105))
+	for _, values := range(results) {
+		NotEqual(t, values, nil)
+		Equal(t, values[0].Int(), int64(105))
+	}
 
-
-	vales, err = Fire("test-event2", -100, 5)
+	results, err = Fire("test-event2", -100, 5)
 	Equal(t, err, nil)
-	NotEqual(t, vales, nil)
-	Equal(t, vales[0].Int(), int64(-95))
+	for _, values := range(results) {
+		NotEqual(t, values, nil)
+		Equal(t, values[0].Int(), int64(-95))
+	}
 
 	ClearEvents()
 }
@@ -56,10 +55,10 @@ func TestClear(t *testing.T) {
 	Equal(t, 2, EventCount())
 	Clear("test-event")
 	Equal(t, 1, EventCount())
-	err := On("test-event", func() {	})
-	Equal(t, err, nil)
+	On("test-event", func() {	})
 	Equal(t, 2, EventCount())
 	ClearEvents()
+	Equal(t, 0, EventCount())
 }
 
 func TestClearEvents(t *testing.T) {
@@ -112,7 +111,7 @@ func TestHasEvent(t *testing.T) {
 }
 
 
-func TestParallel(t *testing.T) {
+func TestParallelSimple(t *testing.T) {
 	On("p-1", func () {
 		for i:=1; i<=10000; i++ {
 
@@ -137,5 +136,50 @@ func TestParallel(t *testing.T) {
 	now := runtime.NumGoroutine()
 	fmt.Println("Number of go routine running ", now - prev)
 	Equal(t, 8, now - prev)
+	ClearEvents();
+}
+
+// TestParallelMultiHandler verifies that when we have multiple listeners
+// on an event each one is fired.
+func TestParallelMultiHandler(t *testing.T) {
+	// listen on p1
+	On("p-1", func () {
+		for i:=1; i<=100000; i++ {
+
+		}
+	})
+
+	// listen on p1 again
+	On("p-1", func () {
+		for i:=1; i<=100000; i++ {
+
+		}
+	})
+
+	// listen on p2
+	On("p-2", func () {
+		for i:=1; i<=100000; i++ {
+
+		}
+	})
+
+	prev := runtime.NumGoroutine()
+	FireBackground("p-1")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+	FireBackground("p-2")
+
+	now := runtime.NumGoroutine()
+	fmt.Println("Number of go routine running ", now - prev)
+	// we need 9 goroutines::
+	//  2 listeners on p1 and one listener on p2
+	//  1 fire on p1 -> 2*1 = 2
+	//  7 fire on p2 -> 1*7 = 7
+	//  = 2*1 + 1*7 = 9
+	Equal(t, 9, now - prev)
 	ClearEvents();
 }

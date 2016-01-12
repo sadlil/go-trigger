@@ -2,15 +2,15 @@ package trigger
 
 import "reflect"
 
-func On(event string, task interface{}) error {
-	return add(event, task)
+func On(event string, task interface{}) {
+	add(event, task)
 }
 
-func Fire(event string, params ...interface{}) ([]reflect.Value, error) {
+func Fire(event string, params ...interface{}) ([][]reflect.Value, error) {
 	return invoke(event, params...)
 }
 
-func FireBackground(event string, params ...interface{}) (chan []reflect.Value, error) {
+func FireBackground(event string, params ...interface{}) ([]chan []reflect.Value, error) {
 	return invokeParallel(event, params...)
 }
 

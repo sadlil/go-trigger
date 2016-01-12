@@ -6,49 +6,53 @@ import (
 	"runtime"
 )
 
-var functionMap map[string]interface{}
+var functionMap map[string][]interface{}
 
 func init() {
-	functionMap = make(map[string]interface{})
+	functionMap = make(map[string][]interface{})
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-func add(event string, task interface{}) error {
-	if _, ok := functionMap[event]; ok {
-		return errors.New("Event Already Defined")
-	}
-	functionMap[event] = task;
-	return nil
+func add(event string, task interface{}) {
+	functionMap[event] = append(functionMap[event], task);
 }
 
-
-func invoke(event string, params ...interface{}) ([]reflect.Value, error) {
-	f := reflect.ValueOf(functionMap[event])
-	if len(params) != f.Type().NumIn() {
-		return nil, errors.New("Parameter Mismatched")
+func invoke(event string, params ...interface{}) ([][]reflect.Value, error) {
+	result := make([][]reflect.Value, 0)
+	for _, regif := range(functionMap[event]) {
+		f := reflect.ValueOf(regif)
+		if len(params) != f.Type().NumIn() {
+			return nil, errors.New("Parameter Mismatched")
+		}
+		in := make([]reflect.Value, len(params))
+		for k, param := range params {
+			in[k] = reflect.ValueOf(param)
+		}
+		res := f.Call(in)
+		result = append(result, res)
 	}
-	in := make([]reflect.Value, len(params))
-	for k, param := range params {
-		in[k] = reflect.ValueOf(param)
-	}
-	result := f.Call(in)
 	return result, nil
 }
 
-func invokeParallel(event string, params ...interface{}) (chan []reflect.Value, error) {
-	f := reflect.ValueOf(functionMap[event])
-	if len(params) != f.Type().NumIn() {
-		return nil, errors.New("Parameter Mismatched")
+func invokeParallel(event string, params ...interface{}) ([]chan []reflect.Value, error) {
+	result := make([]chan []reflect.Value, 0)
+	for _, regif := range(functionMap[event]) {
+		f := reflect.ValueOf(regif)
+		if len(params) != f.Type().NumIn() {
+			return nil, errors.New("Parameter Mismatched")
+		}
+		in := make([]reflect.Value, len(params))
+		for k, param := range params {
+			in[k] = reflect.ValueOf(param)
+		}
+		results := make(chan []reflect.Value)
+		result = append(result, results)
+		go func() {
+			results <- f.Call(in)
+		}()
+
 	}
-	in := make([]reflect.Value, len(params))
-	for k, param := range params {
-		in[k] = reflect.ValueOf(param)
-	}
-	results := make(chan []reflect.Value)
-	go func() {
-		results <- f.Call(in)
-	}()
-	return results, nil
+	return result, nil
 }
 
 
@@ -61,7 +65,7 @@ func clear(event string) error {
 }
 
 func deleteAll() error {
-	functionMap = make(map[string]interface{})
+	functionMap = make(map[string][]interface{})
 	return nil
 }
 

@@ -61,7 +61,7 @@ You can define Your events from another package
 ```
 
 
-You can Define events with parameteres and return types.
+You can Define events with parameters and return types.
 ```go
 func TestFunc(a, b int) int {
     return a + b
@@ -177,13 +177,9 @@ EventCount() int
  1. Trigger event in background. - **[]**
  2. Return already type converted values from Fire.
  3. Add support of Methods on structs events.
- 4. Multiple event handler for a event.
 
 ### Licence
     Licenced under MIT Licence
 
-
-
-
-##### Any Suggestions and Bug Report will be gladly appricated.
+##### Any Suggestions and Bug Report will be gladly appreciated.
 
