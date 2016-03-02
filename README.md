@@ -174,7 +174,7 @@ EventCount() int
 
 
 ### Under Development Features
- 1. Trigger event in background. - **[]**
+ 1. ~~Trigger event in background.~~
  2. Return already type converted values from Fire.
  3. Add support of Methods on structs events.
  4. Multiple event handler for a event.
