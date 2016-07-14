@@ -185,5 +185,5 @@ EventCount() int
 
 
 
-##### Any Suggestions and Bug Report will be gladly appricated.
+##### Any Suggestions and Bug Report will be gladly appreciated.
 
