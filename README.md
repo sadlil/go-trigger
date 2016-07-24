@@ -23,7 +23,7 @@ $ go install
 ```
 #### Currently [available Tags](https://github.com/sadlil/go-trigger/releases)
  - [v0.02](https://github.com/sadlil/go-trigger/releases/tag/v0.02)
-     - Added pass through able Local events.
+     - Added pass throwable Local events.
      - Added thread safe lock.
      
  - [v0.01](https://github.com/sadlil/go-trigger/releases/tag/v0.01)
@@ -35,7 +35,7 @@ $ go install
 
 
 ### How To Use
-##### 1. Global Events
+#### 1. Global Events
 Import the package into your code. Add the events with `trigger.On` method.
 And call that event handler with `trigger.Fire` method. All the event added 
 like this will be global events. You can call `Fire` from anywhere.
@@ -139,7 +139,7 @@ func main() {
 
 ```
 
-##### 2. Local Events
+#### 2. Local Events
 Trigger instance that will not effecct the global event. All event added to
 an local event instace can call only via this trigger instance. This is
 implementation of plugable `Trigger` interface.
