@@ -31,7 +31,6 @@ $ go install
      - Local Event,
      - Thread Safe Mutex Lock.
 
-
 ### How To Use
 #### 1. Global Events
 Import the package into your code. Add the events with `trigger.On` method.
@@ -118,7 +117,6 @@ need to import it there.
   }
 ```
 
-
 You can run events in background with `FireBackground()`
 ```go
 func main() {
@@ -187,7 +185,7 @@ Fire(event string, params ...interface{}) ([]reflect.Value, error)
   
 FireBackground(event string, params ...interface{}) (chan []reflect.Value, error)
   - Fires the task specified with the event key. Unlike Fire it runs the event in
-  background in goroutine. It triggers the event but does not wait for the event
+  background in go routine. It triggers the event but does not wait for the event
   to end. It writes the returned values of the event in a channel and returns the
   channel of reflect.Values. You can get the returned values by reading the
   channel (IE. ret := <- returned channel).
