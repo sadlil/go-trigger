@@ -5,7 +5,7 @@ event and Trigger it from anywhere you want.
 ### Get The Package 
 ```bash
 
-$ go get github.com/sadlil/go-trigger
+$ go get -u github.com/sadlil/go-trigger
 
 ```
 
@@ -15,24 +15,30 @@ Change the tag using git.
 `go install` the package.
  
 ```bash
-$ go get github.com/sadlil/go-trigger
+$ go get -u github.com/sadlil/go-trigger
 $ cd $GOPATH/src/github.com/sadlil/go-trigger
 $ git checkout tags/<tag_name>
 $ go install
 
 ```
 #### Currently [available Tags](https://github.com/sadlil/go-trigger/releases)
+ - [v0.02](https://github.com/sadlil/go-trigger/releases/tag/v0.02)
+     - Added pass through able Local events.
+     - Added thread safe lock.
+     
  - [v0.01](https://github.com/sadlil/go-trigger/releases/tag/v0.01)
-     - Add Event with unique key Id.
+     - Add Global event with unique key Id.
      - Trigger Event.
      - List Events.
      - Clear and Delete Events.
+     - Trigger event in background
 
 
 ### How To Use
-
+##### 1. Global Events
 Import the package into your code. Add the events with `trigger.On` method.
-And call that event handler with `trigger.Fire` method.
+And call that event handler with `trigger.Fire` method. All the event added 
+like this will be global events. You can call `Fire` from anywhere.
 
 ````go
 package main
@@ -67,14 +73,12 @@ func TestFunc(a, b int) int {
     return a + b
 }
 
-// Call Them Using
+// Call them using
 trigger.On("third-event", TestFunc)
 values, err := trigger.Fire("third-event", 5, 6)
 
 // IMPORTANT : You need to type convert Your Returned Values using
 // values[0].Int()
-// I will try fix this in next version.
-
 ```
 
 
@@ -89,6 +93,8 @@ need to import it there.
   func AFunction(one, two int) int {
     return one + two
   }
+  
+  
 //---------------------------------------------
   package b
   import (
@@ -99,6 +105,8 @@ need to import it there.
   func() {
     trigger.On("new-event", a.AFunction)
   }
+  
+  
 //---------------------------------------------
   package c
   import (
@@ -111,7 +119,6 @@ need to import it there.
     fmt.Println(values[0].Int())
   }
 ```
-
 
 You can run events in background with `FireBackground()`
 ```go
@@ -132,7 +139,44 @@ func main() {
 
 ```
 
-### Methods Available
+##### 2. Local Events
+Trigger instance that will not effecct the global event. All event added to
+an local event instace can call only via this trigger instance. This is
+implementation of plugable `Trigger` interface.
+
+Create a local trigger instance,
+
+````go
+package main
+
+import (
+  "github.com/sadlil/go-trigger"
+  "fmt"
+)
+
+
+func main() {
+  t := trigger.New()
+  t.On("first-event", func() {
+    // Do Some Task Here.
+    fmt.Println("Done")
+  })
+  t.Fire("first-event")
+  
+  // t2 is another trigger instance that will be separate from t1.
+  t2 := trigger.New()
+  t2.On("first-event", func() {
+    // Do Some Task Here.
+    fmt.Println("Done")
+  })
+  t2.Fire("first-event")
+}
+
+```
+**All other methods are availabe on any local trigger instance**
+
+
+### Available methods
 ```go
 On(event string, task interface{}) error
   - Add a Event. task must be function. Throws an error if the event is duplicated.
@@ -157,7 +201,7 @@ FireBackground(event string, params ...interface{}) (chan []reflect.Value, error
 Clear(event string) error
   - Delete a event from the event list. throws an error if event not found.
   
-ClearEvents() error
+ClearEvents()
   - Deletes all event from the event list.
   
 HasEvent(event string) bool
@@ -174,16 +218,12 @@ EventCount() int
 
 
 ### Under Development Features
- 1. ~~Trigger event in background.~~
- 2. Return already type converted values from Fire.
- 3. Add support of Methods on structs events.
- 4. Multiple event handler for a event.
+ 1. Add support of Methods on structs events.
+ 2. Multiple event handler for a event.
 
 ### Licence
-    Licenced under MIT Licence
+    Licenced under [MIT Licence](LICENCE)
 
 
-
-
-##### Any Suggestions and Bug Report will be gladly appricated.
+##### Any Suggestions and Bug Report will be gladly appreciated.
 
