@@ -23,7 +23,7 @@ $ go install
 ```
 #### Currently [available Tags](https://github.com/sadlil/go-trigger/releases)
  - [v0.02](https://github.com/sadlil/go-trigger/releases/tag/v0.02)
-     - Added pass throwable Local events.
+     - Added Local events.
      - Added thread safe lock.
      
  - [v0.01](https://github.com/sadlil/go-trigger/releases/tag/v0.01)
