@@ -19,14 +19,14 @@ type trigger struct {
 }
 
 func (t *trigger) On(event string, task interface{}) error {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	if _, ok := t.functionMap[event]; ok {
 		return errors.New("event already defined")
 	}
 	if reflect.ValueOf(task).Type().Kind() != reflect.Func {
 		return errors.New("task is not a function")
 	}
-	t.mu.Lock()
-	defer t.mu.Unlock()
 	t.functionMap[event] = task
 	return nil
 }
@@ -53,11 +53,11 @@ func (t *trigger) FireBackground(event string, params ...interface{}) (chan []re
 }
 
 func (t *trigger) Clear(event string) error {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	if _, ok := t.functionMap[event]; !ok {
 		return errors.New("event not defined")
 	}
-	t.mu.Lock()
-	defer t.mu.Unlock()
 	delete(t.functionMap, event)
 	return nil
 }
@@ -76,6 +76,8 @@ func (t *trigger) HasEvent(event string) bool {
 }
 
 func (t *trigger) Events() []string {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	events := make([]string, 0)
 	for k := range t.functionMap {
 		events = append(events, k)
@@ -84,6 +86,8 @@ func (t *trigger) Events() []string {
 }
 
 func (t *trigger) EventCount() int {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	return len(t.functionMap)
 }
 

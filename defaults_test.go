@@ -1,7 +1,6 @@
 package trigger
 
 import (
-	"fmt"
 	"runtime"
 	"sort"
 	"testing"
@@ -27,9 +26,7 @@ func TestDualOn(t *testing.T) {
 }
 
 func TestTrigger(t *testing.T) {
-	On("test-event", func() {
-		fmt.Println("Testing Triggered Ok.")
-	})
+	On("test-event", func() {})
 	_, err := Fire("test-event")
 	assert.Equal(t, err, nil)
 
