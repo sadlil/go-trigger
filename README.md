@@ -4,13 +4,11 @@ event and Trigger it from anywhere you want.
 
 ### Get The Package 
 ```bash
-
 $ go get -u github.com/sadlil/go-trigger
-
 ```
 
 ### How to switch to a specific version
-`go get` the package. go to the package directory in your $GOPATH/src. 
+`go get` the package. Go to the package directory in your $GOPATH/src.
 Change the tag using git.
 `go install` the package.
  
@@ -19,7 +17,6 @@ $ go get -u github.com/sadlil/go-trigger
 $ cd $GOPATH/src/github.com/sadlil/go-trigger
 $ git checkout tags/<tag_name>
 $ go install
-
 ```
 #### Currently [available Tags](https://github.com/sadlil/go-trigger/releases)    
  - [v0.01](https://github.com/sadlil/go-trigger/releases/tag/v0.01)
@@ -33,8 +30,8 @@ $ go install
 
 ### How To Use
 #### 1. Global Events
-Import the package into your code. Add the events with `trigger.On` method.
-And call that event handler with `trigger.Fire` method. All the event added 
+Import the package into your code. Add events with `trigger.On` method.
+And call that event handler with `trigger.Fire` method. All the events added
 like this will be global events. You can call `Fire` from anywhere.
 
 ````go
@@ -57,14 +54,14 @@ func main() {
 ```
 
 
-You can define Your events from another package
+You can define your events from another package
 ```go
   trigger.On("second-event", packagename.FunctionName)
   trigger.Fire("second-event")
 ```
 
 
-You can Define events with parameteres and return types.
+You can define events with parameteres and return types.
 ```go
 func TestFunc(a, b int) int {
     return a + b
@@ -79,9 +76,9 @@ values, err := trigger.Fire("third-event", 5, 6)
 ```
 
 
-You can define your event in one package and trigger it another package. Your event and triggers are global.
-Define anywhere, fire anywhere. You can define any function in any package as event u only need to 
-import the function's specified package where you defien the event. Where You trigger the event You do not 
+You can define your event in one package and trigger it another package. Your event and trigger are global.
+Define anywhere, fire anywhere. You can define any function in any package as event you only need to
+import the function's specified package where you define the event. Where you trigger the event, you do not
 need to import it there.
 ```go
 //---------------------------------------------
@@ -143,7 +140,7 @@ implementation of plugable `Trigger` interface.
 
 Create a local trigger instance,
 
-````go
+```go
 package main
 
 import (
@@ -215,8 +212,7 @@ EventCount() int
 
 
 ### Under Development Features
- 1. Add support of Methods on structs events.
- 2. Multiple event handler for a event.
+ 1. Multiple event handler for a event.
 
 ### Licence
     Licenced under MIT Licence
