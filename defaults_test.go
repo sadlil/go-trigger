@@ -140,3 +140,34 @@ func TestNotFunc(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, "task is not a function", err.Error())
 }
+
+type coder struct {
+	name string
+}
+
+func (c *coder) setName(name string) {
+	c.name = name
+}
+
+func (c *coder) getName() string {
+	return c.name
+}
+
+func TestFuncWithReceiver(t *testing.T) {
+	c := &coder{}
+
+	// add setName event
+	On("setName", c.setName)
+	// add getName event
+	On("getName", c.getName)
+
+	// trigger event to set name in "c"
+	Fire("setName", "aerokite")
+
+	// trigger event to get name from "c"
+	values, err := Fire("getName")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(values))
+	assert.EqualValues(t, "aerokite", values[0].String())
+	assert.EqualValues(t, "aerokite", c.name)
+}

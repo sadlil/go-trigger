@@ -1,8 +1,9 @@
 package trigger
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDifferentEventHandlers(t *testing.T) {
