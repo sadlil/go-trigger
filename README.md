@@ -34,7 +34,7 @@ Import the package into your code. Add events with `trigger.On` method.
 And call that event handler with `trigger.Fire` method. All the events added
 like this will be global events. You can call `Fire` from anywhere.
 
-````go
+```go
 package main
 
 import (
@@ -50,7 +50,6 @@ func main() {
   })
   trigger.Fire("first-event")
 }
-
 ```
 
 
